@@ -1,0 +1,6 @@
+google-cloud-storage
+google-cloud-vision
+google-api-core
+grpcio
+functions-framework==3.*
+gcloud
