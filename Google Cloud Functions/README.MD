@@ -38,4 +38,4 @@ Example response:
 In case of any errors during execution, the function returns an appropriate HTTP status code along with an error message in the response body.
 
 Feel free to deploy and utilize this Cloud Function to efficiently create text files within a specified bucket.
-```
+
