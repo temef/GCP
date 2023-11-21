@@ -1,0 +1,222 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Book management API
+  description: OpenAPI 3 specification in YAML format that serves basic CRUD (Create, Read, Update, Delete) for event management via HTTP requests.
+paths:
+  /book:
+    post:
+      summary: Create new book.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':    # status code
+          description: Created book
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Success'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: error payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /books:
+    get:
+      summary: Get books by author
+      parameters:
+      - name: author
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Books'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: error payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      
+  /book/{book_id}:
+    get:
+      summary: Get book by book ID
+      parameters:
+      - name: book_id
+        in: path
+        description: ID of book to return
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  access:
+                    type: string
+                  location:
+                    type: string
+                  created_date:
+                    type: string
+                    format: date-time
+                  modified_date:
+                    type: string
+                    format: date-time
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: error payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+        summary: Deletes a book
+        parameters:
+        - name: book_id
+          in: path
+          description: ID of book to return
+          required: true
+          schema:
+            type: string
+        responses:
+          '204':    # status code
+            description: No conten
+          '404':
+            description: Not Found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          default:
+            description: error payload
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+    put:
+      summary: Updating book by ID
+      parameters:
+      - name: book_id
+        in: path
+        description: ID of book to return
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':    # status code
+          description: Updated book
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Success'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: error payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Book:
+      type: object
+      required:
+        - name
+        - author
+        - isbn
+        - rating
+        - publish_date
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        author:
+          type: string
+          maxLength: 50
+        isbn:
+          type: string
+          minLength: 13
+          maxLength: 13
+        rating:
+          type: number  
+          minimum: 0
+          maximum: 5
+        publish_date:
+          type: string
+          format: date-time
+    Books:
+      type: array
+      description: An array of books
+      items: 
+        $ref: '#/components/schemas/Book'
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+        id:
+          type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
